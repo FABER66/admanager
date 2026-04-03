@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdManager — Pubblicità Editoriale</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5F0;--sur:#fff;--brd:#E2DDD6;--brd2:#C8C2B8;
+  --tx:#1A1814;--tx2:#6B6560;--tx3:#A09990;
+  --ac:#2C5F8A;--acl:#EAF1F8;--acd:#1A3E5C;
+  --go:#B8900A;--gol:#FBF5E0;
+  --gn:#2A6B3C;--gnl:#E8F5EC;
+  --rd:#8B2A2A;--rdl:#FAEAEA;
+  --am:#7A5200;--aml:#FDF3DC;
+  --sw:224px;--r:10px;--rs:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── LOGIN ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.lcard{background:var(--sur);border:1px solid var(--brd);border-radius:16px;padding:48px 40px;width:380px}
+.llogo{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:4px}
+.lsub{font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:36px}
+.lcard label{display:block;font-size:12px;font-weight:500;color:var(--tx2);margin-bottom:6px;margin-top:16px}
+.lcard input{width:100%;border:1px solid var(--brd);border-radius:var(--rs);padding:10px 14px;font-family:inherit;font-size:14px;color:var(--tx);background:var(--bg);outline:none;transition:border-color .2s}
+.lcard input:focus{border-color:var(--ac);background:#fff}
+.lbtn{width:100%;margin-top:24px;padding:11px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
+.lbtn:hover{background:var(--acd)}
+.lhint{margin-top:20px;font-size:11px;color:var(--tx3);text-align:center;line-height:1.9}
+.lerr{margin-top:12px;font-size:12px;color:var(--rd);text-align:center;display:none}
+
+/* ── APP ── */
+#app{display:none;min-height:100vh}
+.sidebar{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--sur);border-right:1px solid var(--brd);display:flex;flex-direction:column;z-index:100}
+.sb-brand{padding:22px 20px 18px;border-bottom:1px solid var(--brd)}
+.sb-brand-name{font-family:'DM Serif Display',serif;font-size:20px}
+.sb-brand-tag{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
+.sb-riviste{padding:10px 16px;border-bottom:1px solid var(--brd)}
+.sb-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:6px}
+.rpill{display:inline-flex;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500;margin:2px 2px 2px 0;cursor:pointer;border:1px solid var(--brd);color:var(--tx2);background:var(--bg);transition:all .15s}
+.rpill.active{border-color:var(--ac);color:var(--ac);background:var(--acl)}
+.sb-nav{flex:1;padding:6px 10px;overflow-y:auto}
+.ngrp{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);padding:10px 10px 4px}
+.ni{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--rs);cursor:pointer;color:var(--tx2);font-size:13px;transition:all .15s;margin-bottom:1px}
+.ni:hover{background:var(--bg);color:var(--tx)}
+.ni.active{background:var(--acl);color:var(--ac);font-weight:500}
+.ni svg{width:15px;height:15px;flex-shrink:0;opacity:.7}
+.ni.active svg{opacity:1}
+.sb-user{padding:12px 16px;border-top:1px solid var(--brd);display:flex;align-items:center;gap:10px}
+.uav{width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;font-size:11px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.uname{font-size:12px;font-weight:500}
+.urole{font-size:11px;color:var(--tx3)}
+.lout{margin-left:auto;background:none;border:none;color:var(--tx3);cursor:pointer;font-size:11px;padding:3px 7px;border-radius:4px}
+.lout:hover{color:var(--rd)}
+.main{margin-left:var(--sw);min-height:100vh}
+.topbar{position:sticky;top:0;background:rgba(247,245,240,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--brd);padding:11px 26px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar-title{font-size:15px;font-weight:500}
+.tact{display:flex;gap:8px}
+.content{padding:22px 26px}
+.section{display:none}
+.section.active{display:block}
+
+/* ── COMPONENTI ── */
+.btn{padding:6px 14px;border-radius:var(--rs);font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--brd);background:var(--sur);color:var(--tx2);transition:all .15s}
+.btn:hover{border-color:var(--brd2);color:var(--tx)}
+.btn-p{background:var(--ac);border-color:var(--ac);color:#fff}
+.btn-p:hover{background:var(--acd);border-color:var(--acd)}
+.btn-sm{padding:4px 11px;font-size:12px}
+.btn-rd{background:var(--rd);border-color:var(--rd);color:#fff}
+.btn-go{background:var(--go);border-color:var(--go);color:#fff}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mc{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:14px 16px}
+.ml{font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.mv{font-size:20px;font-weight:300;font-family:'DM Serif Display',serif}
+.md{font-size:11px;margin-top:3px}
+.up{color:var(--gn)}.dn{color:var(--rd)}.nt{color:var(--tx3)}
+.card{background:var(--sur);border:1px solid var(--brd);border-radius:var(--r);padding:18px;margin-bottom:14px}
+.ct{font-size:13px;font-weight:500;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--tx3);padding:7px 10px;border-bottom:1px solid var(--brd)}
+td{padding:9px 10px;border-bottom:1px solid var(--brd);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--bg)}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.bg{background:var(--gnl);color:var(--gn)}
+.ba{background:var(--aml);color:var(--am)}
+.bb{background:var(--acl);color:var(--ac)}
+.br{background:var(--rdl);color:var(--rd)}
+.bgr{background:var(--bg);color:var(--tx2);border:1px solid var(--brd)}
+.fg{display:flex;flex-direction:column;gap:4px}
+.flbl{font-size:11px;font-weight:500;color:var(--tx2)}
+.fi,.fsel,.fta{border:1px solid var(--brd);border-radius:var(--rs);padding:7px 11px;font-family:inherit;font-size:13px;color:var(--tx);background:var(--bg);outline:none;transition:border-color .2s;width:100%}
+.fi:focus,.fsel:focus,.fta:focus{border-color:var(--ac);background:#fff}
+.fi-sm{padding:4px 8px;font-size:12px;border:1px solid var(--brd);border-radius:4px;font-family:inherit;color:var(--tx);background:var(--bg);outline:none;width:70px;text-align:right}
+.fi-sm:focus{border-color:var(--ac);background:#fff}
+.fi-sm.pericolo{border-color:var(--rd);background:var(--rdl);color:var(--rd)}
+.fi-sm.attenzione{border-color:#D4A017;background:var(--gol)}
+.fta{resize:vertical;min-height:70px}
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:center;justify-content:center}
+.modal-ov.open{display:flex}
+.modal{background:var(--sur);border-radius:14px;width:600px;max-width:96vw;max-height:92vh;overflow-y:auto;border:1px solid var(--brd)}
+.mhdr{padding:18px 22px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.mtitle{font-size:15px;font-weight:500}
+.mclose{background:none;border:none;font-size:20px;color:var(--tx3);cursor:pointer;line-height:1;padding:2px}
+.mclose:hover{color:var(--tx)}
+.mbody{padding:18px 22px}
+.mfoot{padding:12px 22px;border-top:1px solid var(--brd);display:flex;justify-content:flex-end;gap:8px}
+.pbar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:4px}
+.pbar-fill{height:100%;border-radius:3px;transition:width .4s}
+.notif{border-radius:var(--rs);padding:9px 13px;font-size:12px;margin-bottom:12px;display:flex;align-items:flex-start;gap:8px}
+.n-warn{background:var(--aml);border:1px solid #D4A017;color:var(--am)}
+.n-danger{background:var(--rdl);border:1px solid #C84444;color:var(--rd)}
+.n-ok{background:var(--gnl);border:1px solid #4A9060;color:var(--gn)}
+.n-info{background:var(--acl);border:1px solid #4A7FAA;color:var(--ac)}
+.pl-t{width:100%;font-size:13px;border-collapse:collapse}
+.pl-t td{padding:5px 0}
+.pl-t td:last-child{text-align:right;font-weight:500}
+.pl-sep td{border-top:1px solid var(--brd);padding-top:9px;font-weight:500;font-size:14px}
+.pl-net td{padding-top:6px;font-size:17px;font-family:'DM Serif Display',serif}
+.pl-cat td{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);padding:10px 0 3px!important}
+.tg{color:var(--gn)}.tr{color:var(--rd)}.ta{color:var(--am)}
+.issue-row{display:grid;grid-template-columns:200px 1fr auto;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--brd);border-radius:var(--rs);margin-bottom:7px;background:var(--sur)}
+.adm{display:none}
+.sep{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--tx3);padding:10px 0 4px;border-bottom:1px solid var(--brd);margin-bottom:8px}
+
+/* ── GRIGLIA SPAZI ── */
+.spazi-griglia{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:12px}
+.spazio-card{border:1px solid var(--brd);border-radius:var(--rs);padding:10px 12px;text-align:center}
+.spazio-card.premium{border-color:var(--go);background:var(--gol)}
+.spazio-card.venduto{border-color:var(--gn);background:var(--gnl)}
+.spazio-card.libero{border-color:var(--brd);background:var(--sur)}
+.sc-nome{font-size:11px;font-weight:500;color:var(--tx);margin-bottom:4px}
+.sc-prezzo{font-size:14px;font-family:'DM Serif Display',serif;color:var(--tx);margin-bottom:2px}
+.sc-stato{font-size:10px;color:var(--tx3)}
+.sc-min{font-size:10px;color:var(--rd);margin-top:2px}
+
+/* ── STRUTTURA NUMERO ── */
+.struct-row{display:grid;grid-template-columns:1fr 80px 90px 100px 90px;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--brd);font-size:12px}
+.struct-row:last-child{border-bottom:none}
+.struct-hdr{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;color:var(--tx3);background:var(--bg);padding:6px 10px;border-radius:6px 6px 0 0}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="lcard">
+    <div class="llogo">AdManager</div>
+    <div class="lsub">Gestione Pubblicità Editoriale</div>
+    <label>Email</label><input type="email" id="l-email" placeholder="nome@esempio.it">
+    <label>Password</label><input type="password" id="l-pwd" placeholder="••••••••">
+    <button class="lbtn" onclick="doLogin()">Accedi</button>
+    <div class="lerr" id="lerr">Email o password non corrette</div>
+    <div class="lhint">Admin: admin@everylife.it / admin123<br>Agente: agente@everylife.it / agente123</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-brand-name">AdManager</div>
+      <div class="sb-brand-tag">Pubblicità Editoriale</div>
+    </div>
+    <div class="sb-riviste">
+      <div class="sb-lbl">Rivista attiva</div>
+      <div id="riviste-pills"></div>
+    </div>
+    <nav class="sb-nav">
+      <div class="ngrp">Vendite</div>
+      <div class="ni active" onclick="goTo('dashboard')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>Dashboard
+      </div>
+      <div class="ni" onclick="goTo('clienti')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>Clienti
+      </div>
+      <div class="ni" onclick="goTo('preventivi')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h10v12H3zM6 2v12M3 6h3M3 9h3M9 6h2M9 9h2"/></svg>Preventivi
+      </div>
+      <div class="ni" onclick="goTo('listino')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 7h14M5 3v10"/></svg>Listino &amp; spazi
+      </div>
+      <div class="ni" onclick="goTo('piano')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="13" rx="2"/><path d="M5 1v3M11 1v3M1 7h14"/></svg>Pianificazione
+      </div>
+      <div class="ngrp adm">Amministrazione</div>
+      <div class="ni adm" onclick="goTo('pagamenti')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 4v4.5l2.5 1.5"/></svg>Pagamenti
+      </div>
+      <div class="ni adm" onclick="goTo('pl')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12L5 8L8 10L11 5L14 7"/><path d="M2 14h12"/></svg>P&amp;L per numero
+      </div>
+    </nav>
+    <div class="sb-user">
+      <div class="uav" id="u-ini">—</div>
+      <div><div class="uname" id="u-nome">—</div><div class="urole" id="u-ruolo">—</div></div>
+      <button class="lout" onclick="doLogout()">Esci</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="tact" id="page-act"></div>
+    </div>
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="section active" id="sec-dashboard">
+        <div class="g4">
+          <div class="mc"><div class="ml">Raccolta totale</div><div class="mv">€ 18.400</div><div class="md up">↑ 12% vs mese scorso</div></div>
+          <div class="mc"><div class="ml">Preventivi aperti</div><div class="mv">7</div><div class="md nt">3 in attesa risposta</div></div>
+          <div class="mc adm"><div class="ml">Da incassare</div><div class="mv">€ 4.200</div><div class="md dn">2 fatture scadute</div></div>
+          <div class="mc"><div class="ml">Clienti attivi</div><div class="mv">24</div><div class="md up">5 nuovi questo mese</div></div>
+        </div>
+        <div id="dash-notif"></div>
+        <div class="g2">
+          <div class="card">
+            <div class="ct">Ultimi preventivi</div>
+            <div class="tw"><table>
+              <thead><tr><th>Cliente</th><th>Rivista</th><th>Importo</th><th>Stato</th></tr></thead>
+              <tbody>
+                <tr><td>Farmacia Rossi</td><td>Everylife</td><td>€ 900</td><td><span class="badge bg">Confermato</span></td></tr>
+                <tr><td>Hotel Trevignano</td><td>Aqua&amp;Sale</td><td>€ 550</td><td><span class="badge ba">In attesa</span></td></tr>
+                <tr><td>Clinica Bracciano</td><td>Metropolitan</td><td>€ 1.200</td><td><span class="badge bb">Inviato</span></td></tr>
+                <tr><td>Toelettatura Fido</td><td>Pet&amp;Go</td><td>€ 450</td><td><span class="badge ba">In attesa</span></td></tr>
+              </tbody>
+            </table></div>
+          </div>
+          <div>
+            <div class="card"><div class="ct">Raccolta per rivista</div><div id="chart-riviste"></div></div>
+            <div class="card adm"><div class="ct">Prossime chiusure</div>
+              <table><thead><tr><th>Rivista</th><th>Uscita</th><th>Spazi liberi</th></tr></thead><tbody>
+                <tr><td>Everylife n.1</td><td>15 mag</td><td><span class="badge ba">3 rimasti</span></td></tr>
+                <tr><td>Pet&amp;Go n.1</td><td>01 giu</td><td><span class="badge bg">8 disp.</span></td></tr>
+              </tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CLIENTI ── -->
+      <div class="section" id="sec-clienti">
+        <div class="card">
+          <div class="ct">Anagrafica clienti<button class="btn btn-p btn-sm" onclick="openModal('m-cliente')">+ Nuovo cliente</button></div>
+          <div class="tw"><table id="tbl-clienti">
+            <thead><tr><th>Ragione sociale</th><th>Referente</th><th>Settore</th><th>Contatti</th><th>Riviste</th><th>Fatturato</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ── PREVENTIVI ── -->
+      <div class="section" id="sec-preventivi">
+        <div id="alert-prev"></div>
+        <div class="card">
+          <div class="ct">Preventivi<button class="btn btn-p btn-sm" onclick="openModal('m-prev')">+ Nuovo preventivo</button></div>
+          <div class="tw"><table id="tbl-prev">
+            <thead><tr><th>N°</th><th>Cliente</th><th>Rivista</th><th>Formato</th><th>Numero</th><th>Importo</th><th>Min. sostenibilità</th><th>Agente</th><th>Stato</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ── LISTINO & SPAZI ── -->
+      <div class="section" id="sec-listino">
+        <div class="g2">
+          <div>
+            <!-- STRUTTURA NUMERO ATTIVO -->
+            <div class="card">
+              <div class="ct">
+                Struttura spazi per numero
+                <div style="display:flex;align-items:center;gap:8px">
+                  <select class="fsel" id="lst-num-sel" onchange="renderListino()" style="font-size:12px;padding:4px 8px;width:auto"></select>
+                  <button class="btn btn-sm btn-p" onclick="openModal('m-struttura')">Modifica struttura</button>
+                </div>
+              </div>
+              <div id="listino-spazi-griglia"></div>
+              <div id="listino-riepilogo"></div>
+            </div>
+          </div>
+          <div>
+            <!-- PREZZI DI VENDITA -->
+            <div class="card">
+              <div class="ct">Prezzi di vendita <span style="font-size:11px;color:var(--tx3);font-weight:400">— modificabili</span></div>
+              <div id="listino-prezzi"></div>
+              <div style="margin-top:10px;font-size:11px;color:var(--tx3);line-height:1.8">
+                · 3+ numeri consecutivi: sconto 10%<br>
+                · Multi-rivista (2+): sconto 8%<br>
+                · Pagamento anticipato: sconto 5%<br>
+                · Gli sconti non possono portare sotto il prezzo minimo di sostenibilità
+              </div>
+            </div>
+            <div class="card" id="card-analisi">
+              <div class="ct">Analisi sostenibilità prezzi</div>
+              <div id="listino-analisi"><div style="font-size:12px;color:var(--tx3);text-align:center;padding:12px 0">Inserisci i costi nella sezione P&amp;L per vedere i prezzi minimi</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PIANIFICAZIONE ── -->
+      <div class="section" id="sec-piano">
+        <div class="card">
+          <div class="ct">Numeri pianificati 2026<button class="btn btn-p btn-sm" onclick="openModal('m-numero')">+ Nuovo numero</button></div>
+          <div id="piano-list"></div>
+        </div>
+      </div>
+
+      <!-- ── PAGAMENTI (admin) ── -->
+      <div class="section" id="sec-pagamenti">
+        <div class="g3">
+          <div class="mc"><div class="ml">Incassato (mese)</div><div class="mv tg">€ 14.200</div></div>
+          <div class="mc"><div class="ml">In attesa</div><div class="mv">€ 4.200</div></div>
+          <div class="mc"><div class="ml">Scaduto</div><div class="mv tr">€ 1.100</div></div>
+        </div>
+        <div class="card">
+          <div class="ct">Registro pagamenti</div>
+          <div class="tw"><table>
+            <thead><tr><th>Cliente</th><th>Rivista</th><th>Formato</th><th>Importo</th><th>Scadenza</th><th>Stato</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Farmacia Rossi</td><td>Everylife</td><td>Pagina intera</td><td>€ 900</td><td>01/04/26</td><td><span class="badge bg">Pagato</span></td><td></td></tr>
+              <tr><td>Hotel Trevignano</td><td>Aqua&amp;Sale</td><td>Mezza pagina</td><td>€ 550</td><td>15/04/26</td><td><span class="badge ba">Atteso</span></td><td><button class="btn btn-sm" onclick="alert('Segnato pagato')">Segna pagato</button></td></tr>
+              <tr><td>Clinica Bracciano</td><td>Metropolitan</td><td>Storia fornitore</td><td>€ 1.200</td><td>10/04/26</td><td><span class="badge bb">Fatturato</span></td><td><button class="btn btn-sm">Segna pagato</button></td></tr>
+              <tr><td>Ottica Lazio</td><td>Everylife</td><td>Mezza pagina</td><td>€ 550</td><td>20/03/26</td><td><span class="badge br">Scaduto</span></td><td><button class="btn btn-sm btn-rd">Sollecito</button></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- ── P&L (admin) ── -->
+      <div class="section" id="sec-pl">
+        <div id="pl-tabs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px"></div>
+        <div class="g2">
+          <!-- inserimento costi -->
+          <div>
+            <div class="card">
+              <div class="ct">Costi del numero — <span id="pl-lbl" style="color:var(--ac)">—</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="grid-column:1/-1" class="sep">Produzione</div>
+                <div class="fg"><label class="flbl">Stampa (€)</label><input type="number" class="fi" id="i-stampa" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Distribuzione (€)</label><input type="number" class="fi" id="i-distrib" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Marketing rivista (€)</label><input type="number" class="fi" id="i-mktg" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Editoriale / redazione (€)</label><input type="number" class="fi" id="i-edit" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Impaginazione / grafica (€)</label><input type="number" class="fi" id="i-impag" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Fotografia (€)</label><input type="number" class="fi" id="i-foto" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div style="grid-column:1/-1" class="sep">Gestione</div>
+                <div class="fg"><label class="flbl">Provvigioni agenti (€)</label><input type="number" class="fi" id="i-provv" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Spese ufficio / telefono (€)</label><input type="number" class="fi" id="i-ufficio" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Trasferte / carburante (€)</label><input type="number" class="fi" id="i-trasferte" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Altro (€)</label><input type="number" class="fi" id="i-altro" value="0" min="0" oninput="aggiornaPL()"></div>
+                <div style="grid-column:1/-1" class="sep">Parametri prezzo minimo</div>
+                <div class="fg"><label class="flbl">Copie stampate</label><input type="number" class="fi" id="i-copie" value="3000" min="100" oninput="aggiornaPL()"></div>
+                <div class="fg"><label class="flbl">Margine obiettivo (%)</label><input type="number" class="fi" id="i-margine" value="20" min="0" max="100" oninput="aggiornaPL()"></div>
+                <div style="grid-column:1/-1" class="sep">Ricavi</div>
+                <div class="fg" style="grid-column:1/-1"><label class="flbl">Ricavi pubblicità confermati (€)</label><input type="number" class="fi" id="i-ricavi" value="0" min="0" oninput="aggiornaPL()"></div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:14px">
+                <button class="btn btn-p" style="flex:1" onclick="salvaCosti()">Salva costi</button>
+                <button class="btn" style="flex:1" onclick="alert('Import AI da PDF — disponibile con Supabase')">Carica fattura PDF</button>
+              </div>
+            </div>
+          </div>
+          <!-- conto economico -->
+          <div>
+            <div class="card">
+              <div class="ct">Conto economico</div>
+              <div style="margin-bottom:12px">
+                <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px">
+                  <span style="color:var(--tx2)">Copertura costi</span><span id="pl-pct" style="font-weight:500">0%</span>
+                </div>
+                <div class="pbar"><div class="pbar-fill" id="pl-bar" style="width:0%;background:var(--rd)"></div></div>
+              </div>
+              <table class="pl-t">
+                <tr class="pl-cat"><td colspan="2">Produzione</td></tr>
+                <tr><td style="color:var(--tx2)">Stampa</td><td class="tr" id="r-stampa">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Distribuzione</td><td class="tr" id="r-distrib">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Marketing rivista</td><td class="tr" id="r-mktg">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Editoriale</td><td class="tr" id="r-edit">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Impaginazione</td><td class="tr" id="r-impag">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Fotografia</td><td class="tr" id="r-foto">€ 0</td></tr>
+                <tr class="pl-cat"><td colspan="2">Gestione</td></tr>
+                <tr><td style="color:var(--tx2)">Provvigioni agenti</td><td class="tr" id="r-provv">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Spese ufficio</td><td class="tr" id="r-ufficio">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Trasferte</td><td class="tr" id="r-trasferte">€ 0</td></tr>
+                <tr><td style="color:var(--tx2)">Altro</td><td class="tr" id="r-altro">€ 0</td></tr>
+                <tr class="pl-sep"><td>Totale costi</td><td class="tr" id="r-tot">€ 0</td></tr>
+                <tr><td style="color:var(--tx2);padding-top:8px">Ricavi pubblicità</td><td class="tg" id="r-ricavi" style="padding-top:8px">€ 0</td></tr>
+                <tr class="pl-net"><td>Risultato netto</td><td id="r-netto" class="tr">€ 0</td></tr>
+              </table>
+            </div>
+            <div class="card">
+              <div class="ct">Prezzi minimi di sostenibilità per formato</div>
+              <div id="pl-minimi">
+                <div style="font-size:12px;color:var(--tx3);padding:8px 0">Inserisci i costi per calcolare i minimi</div>
+              </div>
+              <div style="margin-top:8px;font-size:11px;color:var(--tx3)">
+                Costo per copia: <strong id="pl-copia">—</strong> &nbsp;·&nbsp; Target ricavi: <strong id="pl-target">—</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- ═══ MODAL CLIENTE ═══ -->
+<div class="modal-ov" id="m-cliente">
+  <div class="modal">
+    <div class="mhdr"><div class="mtitle">Nuovo cliente</div><button class="mclose" onclick="closeModal('m-cliente')">×</button></div>
+    <div class="mbody"><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="fg" style="grid-column:1/-1"><label class="flbl">Ragione sociale *</label><input type="text" class="fi" id="c-ragione" placeholder="es. Farmacia Rossi Srl"></div>
+      <div class="fg"><label class="flbl">Referente</label><input type="text" class="fi" id="c-ref" placeholder="Nome Cognome"></div>
+      <div class="fg"><label class="flbl">Settore</label>
+        <select class="fsel" id="c-settore">
+          <option>Salute / Farmacia</option><option>Ristorazione / Bar</option><option>Hotel / Turismo</option>
+          <option>Commercio / Retail</option><option>Servizi professionali</option><option>Animali / Petshop</option>
+          <option>Sport / Fitness</option><option>Immobiliare</option><option>Altro</option>
+        </select>
+      </div>
+      <div class="fg"><label class="flbl">Telefono</label><input type="tel" class="fi" id="c-tel" placeholder="+39 ..."></div>
+      <div class="fg"><label class="flbl">Email</label><input type="email" class="fi" id="c-email" placeholder="email@azienda.it"></div>
+      <div class="fg" style="grid-column:1/-1"><label class="flbl">Note</label><textarea class="fta" id="c-note" placeholder="Note interne..."></textarea></div>
+    </div></div>
+    <div class="mfoot"><button class="btn" onclick="closeModal('m-cliente')">Annulla</button><button class="btn btn-p" onclick="salvaCliente()">Salva</button></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL PREVENTIVO ═══ -->
+<div class="modal-ov" id="m-prev">
+  <div class="modal">
+    <div class="mhdr"><div class="mtitle">Nuovo preventivo</div><button class="mclose" onclick="closeModal('m-prev')">×</button></div>
+    <div class="mbody"><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="fg" style="grid-column:1/-1"><label class="flbl">Cliente *</label><select class="fsel" id="p-cliente"></select></div>
+      <div class="fg"><label class="flbl">Rivista</label>
+        <select class="fsel" id="p-rivista" onchange="aggiornaNumeriPrev()">
+          <option>Everylife Magazine</option><option>Pet&amp;Go Magazine</option><option>Aqua&amp;Sale Magazine</option><option>Metropolitan</option>
+        </select>
+      </div>
+      <div class="fg"><label class="flbl">Numero</label><select class="fsel" id="p-numero"></select></div>
+      <div class="fg" style="grid-column:1/-1"><label class="flbl">Formato *</label>
+        <select class="fsel" id="p-formato" onchange="sincronizzaPrezzoPrev()">
+        </select>
+      </div>
+      <div class="fg"><label class="flbl">Prezzo di listino</label><input type="number" class="fi" id="p-listino" readonly style="color:var(--tx3)"></div>
+      <div class="fg"><label class="flbl">Prezzo minimo di sostenibilità</label><input type="number" class="fi" id="p-minimo" readonly style="color:var(--rd)"></div>
+      <div class="fg"><label class="flbl">Prezzo applicato (€) *</label><input type="number" class="fi" id="p-prezzo" oninput="aggiornaTotalePrev()"></div>
+      <div class="fg"><label class="flbl">Sconto (%)</label><input type="number" class="fi" id="p-sconto" value="0" min="0" max="50" oninput="applicaSconto()"></div>
+      <div class="fg" style="grid-column:1/-1">
+        <div id="prev-avviso" style="display:none" class="notif n-danger">Prezzo sotto il minimo di sostenibilità — vendita in perdita</div>
+        <label class="flbl">Totale preventivo</label>
+        <div style="font-size:26px;font-family:'DM Serif Display',serif;color:var(--ac)" id="p-totale">€ —</div>
+      </div>
+      <div class="fg" style="grid-column:1/-1"><label class="flbl">Note</label><textarea class="fta" id="p-note" placeholder="Specifiche tecniche, materiali..."></textarea></div>
+    </div></div>
+    <div class="mfoot"><button class="btn" onclick="closeModal('m-prev')">Annulla</button><button class="btn btn-p" onclick="salvaPreventivo()">Invia per approvazione</button></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL STRUTTURA NUMERO ═══ -->
+<div class="modal-ov" id="m-struttura">
+  <div class="modal">
+    <div class="mhdr"><div class="mtitle">Modifica struttura spazi — <span id="str-lbl">—</span></div><button class="mclose" onclick="closeModal('m-struttura')">×</button></div>
+    <div class="mbody">
+      <div class="notif n-info" style="margin-bottom:14px">
+        Base: 40 pagine editoriali + 40 pagine pubblicitarie. Le copertine sono fisse (4 spazi). Le pagine interne si suddividono in intere, mezze e quarti — ogni mezza occupa ½ pagina, ogni quarto ¼. Il totale pagine occupate non può superare 40.
+      </div>
+      <div style="background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--brd);margin-bottom:14px">
+        <div class="struct-hdr">Formato</div>
+        <div id="struct-righe"></div>
+      </div>
+      <div id="struct-riepilogo" style="font-size:12px;color:var(--tx2)"></div>
+    </div>
+    <div class="mfoot"><button class="btn" onclick="closeModal('m-struttura')">Annulla</button><button class="btn btn-p" onclick="salvaStruttura()">Salva struttura</button></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL NUOVO NUMERO ═══ -->
+<div class="modal-ov" id="m-numero">
+  <div class="modal">
+    <div class="mhdr"><div class="mtitle">Pianifica nuovo numero</div><button class="mclose" onclick="closeModal('m-numero')">×</button></div>
+    <div class="mbody"><div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="fg"><label class="flbl">Rivista</label>
+        <select class="fsel" id="nn-rivista">
+          <option>Everylife</option><option>Pet&amp;Go</option><option>Aqua&amp;Sale</option><option>Metropolitan</option>
+        </select>
+      </div>
+      <div class="fg"><label class="flbl">Numero (es. n.3)</label><input type="text" class="fi" id="nn-num" placeholder="n.3"></div>
+      <div class="fg"><label class="flbl">Data uscita</label><input type="date" class="fi" id="nn-uscita"></div>
+      <div class="fg"><label class="flbl">Data chiusura raccolta</label><input type="date" class="fi" id="nn-chiusura"></div>
+      <div class="fg"><label class="flbl">Copie stampate</label><input type="number" class="fi" id="nn-copie" value="3000" min="100"></div>
+      <div class="fg"><label class="flbl">Pagine editoriali</label><input type="number" class="fi" id="nn-pedit" value="40" min="0"></div>
+      <div class="fg" style="grid-column:1/-1"><label class="flbl">Pagine pubblicitarie totali</label><input type="number" class="fi" id="nn-ppub" value="40" min="0"></div>
+    </div></div>
+    <div class="mfoot"><button class="btn" onclick="closeModal('m-numero')">Annulla</button><button class="btn btn-p" onclick="salvaNumero()">Aggiungi numero</button></div>
+  </div>
+</div>
+
+<!-- ═══ MODAL APPROVA ═══ -->
+<div class="modal-ov" id="m-approva">
+  <div class="modal">
+    <div class="mhdr"><div class="mtitle">Approva preventivo</div><button class="mclose" onclick="closeModal('m-approva')">×</button></div>
+    <div class="mbody" id="approva-body"></div>
+    <div class="mfoot">
+      <button class="btn btn-rd" onclick="rifiuta()">Rifiuta</button>
+      <button class="btn btn-p" id="btn-approva" onclick="approva()">Approva e conferma</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATI
+// ═══════════════════════════════════════════════════════
+const USERS = {
+  'admin@everylife.it':  {pwd:'admin123',  nome:'Fabrizio S.',   ruolo:'admin',  ini:'FS'},
+  'agente@everylife.it': {pwd:'agente123', nome:'Marco Bianchi', ruolo:'agente', ini:'MB'}
+};
+
+const RIVISTE = ['Everylife','Pet&Go','Aqua&Sale','Metropolitan'];
+
+// Formati disponibili con peso per calcolo minimo
+// peso = importanza editoriale relativa (usato per distribuire i costi proporzionalmente)
+const FORMATI = [
+  {id:'cop4',  nome:'IV di copertina (ultima)',       desc:'Retro rivista',              peso:3.5, prezzoBase:1800, tipo:'copertina', pagine:1},
+  {id:'cop2',  nome:'II di copertina (interna front)',desc:'Prima pagina interna',       peso:3.0, prezzoBase:1500, tipo:'copertina', pagine:1},
+  {id:'cop3',  nome:'III di copertina (penultima)',   desc:'Fronte ultima',              peso:2.8, prezzoBase:1400, tipo:'copertina', pagine:1},
+  {id:'dop',   nome:'Pagine centrali (doppia)',       desc:'Centro rivista',             peso:3.2, prezzoBase:1600, tipo:'copertina', pagine:2},
+  {id:'int',   nome:'Pagina intera',                  desc:'Full page interni',          peso:1.8, prezzoBase:900,  tipo:'interna',   pagine:1},
+  {id:'mez',   nome:'Mezza pagina',                   desc:'Orizz. o verticale',         peso:1.0, prezzoBase:550,  tipo:'interna',   pagine:0.5},
+  {id:'qua',   nome:'Quarto di pagina',               desc:'Formato compatto',           peso:0.6, prezzoBase:320,  tipo:'interna',   pagine:0.25},
+  {id:'red',   nome:'Storia del fornitore',           desc:'Redazionale branded',        peso:2.5, prezzoBase:1200, tipo:'speciale',  pagine:1},
+  {id:'ins',   nome:'Inserto allegato',               desc:'Foglio allegato',            peso:2.0, prezzoBase:2200, tipo:'speciale',  pagine:0},
+  {id:'ban',   nome:'Banner digitale',                desc:'Solo versione online',       peso:0.5, prezzoBase:350,  tipo:'speciale',  pagine:0},
+];
+
+// Struttura base di un numero: quanti spazi di ogni tipo
+// pagine_pub = 40 di default; copertine fisse 4; il resto sono pagine interne
+function strutturaPredefinita(pagePub) {
+  pagePub = pagePub || 40;
+  // copertine fisse
+  const cop4 = 1, cop2 = 1, cop3 = 1, dop = 1;
+  const pagineCopertine = 1 + 1 + 1 + 2; // 6 pagine occupate dalle copertine
+  const pagineInterne = pagePub - pagineCopertine; // 34 pagine interne di default
+  return {
+    cop4: 1, cop2: 1, cop3: 1, dop: 1,
+    int: Math.floor(pagineInterne),  // di default tutto pagine intere
+    mez: 0, qua: 0,
+    red: 0, ins: 0, ban: 0
+  };
+}
+
+// Numeri pianificati
+let numeri = [
+  {id:'ev1', rivista:'Everylife',    num:'n.1', uscita:'2026-05-15', chiusura:'2026-05-01', copie:3000, pEdit:40, pPub:40, struttura: {cop4:1,cop2:1,cop3:1,dop:1,int:28,mez:6,qua:4,red:2,ins:0,ban:0}},
+  {id:'ev2', rivista:'Everylife',    num:'n.2', uscita:'2026-09-15', chiusura:'2026-09-01', copie:3000, pEdit:40, pPub:40, struttura: strutturaPredefinita(40)},
+  {id:'pg1', rivista:'Pet&Go',       num:'n.1', uscita:'2026-06-01', chiusura:'2026-05-15', copie:2000, pEdit:40, pPub:40, struttura: strutturaPredefinita(40)},
+  {id:'as1', rivista:'Aqua&Sale',    num:'n.1', uscita:'2026-06-15', chiusura:'2026-06-01', copie:2000, pEdit:40, pPub:40, struttura: strutturaPredefinita(40)},
+  {id:'mt1', rivista:'Metropolitan', num:'n.1', uscita:'2026-07-01', chiusura:'2026-06-15', copie:2500, pEdit:40, pPub:40, struttura: strutturaPredefinita(40)},
+];
+
+// Prezzi di vendita (inizialmente = prezzoBase, modificabili)
+let prezziVendita = {};
+FORMATI.forEach(f => { prezziVendita[f.id] = f.prezzoBase; });
+
+// Prezzi minimi calcolati dal P&L (0 = non ancora calcolato)
+let prezziMinimi = {};
+FORMATI.forEach(f => { prezziMinimi[f.id] = 0; });
+
+let clienti = [
+  {id:1,ragione:'Farmacia Rossi Srl', ref:'Dott. Rossi',   settore:'Salute / Farmacia', tel:'06 1234567',  email:'info@farmaciarossi.it',   riviste:['Everylife'],               fat:1800},
+  {id:2,ragione:'Hotel Trevignano',   ref:'Sig.ra Marini', settore:'Hotel / Turismo',   tel:'0761 000111', email:'booking@hoteltrevignano.it',riviste:['Aqua&Sale'],               fat:1100},
+  {id:3,ragione:'Clinica Bracciano',  ref:'Dr. Ferrari',   settore:'Salute / Farmacia', tel:'06 9988776',  email:'segreteria@clinica.it',    riviste:['Metropolitan','Everylife'],fat:2400},
+  {id:4,ragione:'Toelettatura Fido',  ref:'Anna Neri',     settore:'Animali / Petshop', tel:'347 1122334', email:'fido@toelettatura.it',     riviste:['Pet&Go'],                  fat:900},
+];
+
+let preventivi = [
+  {id:'001',cliente:'Farmacia Rossi Srl', rivista:'Everylife',   numId:'ev1',formatoId:'int', numero:'n.1 — mag 26',importo:900,  agente:'Marco Bianchi',stato:'confermato'},
+  {id:'002',cliente:'Hotel Trevignano',   rivista:'Aqua&Sale',   numId:'as1',formatoId:'mez', numero:'n.1 — giu 26',importo:550,  agente:'Marco Bianchi',stato:'attesa'},
+  {id:'003',cliente:'Clinica Bracciano',  rivista:'Metropolitan',numId:'mt1',formatoId:'red', numero:'n.1 — lug 26',importo:1200, agente:'Marco Bianchi',stato:'inviato'},
+  {id:'004',cliente:'Toelettatura Fido',  rivista:'Pet&Go',      numId:'pg1',formatoId:'mez', numero:'n.1 — giu 26',importo:550,  agente:'Marco Bianchi',stato:'attesa'},
+  {id:'005',cliente:'Ottica Lazio',       rivista:'Everylife',   numId:'ev1',formatoId:'mez', numero:'n.1 — mag 26',importo:250,  agente:'Marco Bianchi',stato:'scaduto'},
+];
+
+let currentUser = null;
+let prevInReview = null;
+let numCorrente = null; // numero selezionato nella struttura modale
+
+const COSTI_IDS = ['stampa','distrib','mktg','edit','impag','foto','provv','ufficio','trasferte','altro'];
+const SB = {confermato:'bg',attesa:'ba',inviato:'bb',scaduto:'br',rifiutato:'br'};
+const SL = {confermato:'Confermato',attesa:'In attesa',inviato:'Inviato',scaduto:'Scaduto',rifiutato:'Rifiutato'};
+
+// ═══════════════════════════════════════════════════════
+// UTILITIES
+// ═══════════════════════════════════════════════════════
+function eur(n){ return '€ ' + Math.round(n).toLocaleString('it-IT'); }
+function gv(id){ return parseInt(document.getElementById(id).value) || 0; }
+function fmtData(d){ if(!d) return '—'; const p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0].slice(2); }
+
+function totaleSpazi(struttura) {
+  // restituisce quante pagine fisiche occupa la struttura
+  return (struttura.cop4||0)*1 + (struttura.cop2||0)*1 + (struttura.cop3||0)*1 + (struttura.dop||0)*2
+       + (struttura.int||0)*1 + (struttura.mez||0)*0.5 + (struttura.qua||0)*0.25
+       + (struttura.red||0)*1 + (struttura.ins||0)*0 + (struttura.ban||0)*0;
+}
+
+function conteggioSpazi(struttura) {
+  // restituisce il numero totale di "annunci" distinti
+  return Object.values(struttura).reduce((a,b)=>a+b,0);
+}
+
+// ═══════════════════════════════════════════════════════
+// LOGIN / LOGOUT
+// ═══════════════════════════════════════════════════════
+function doLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const pwd   = document.getElementById('l-pwd').value;
+  const u = USERS[email];
+  if (!u || u.pwd !== pwd) { document.getElementById('lerr').style.display='block'; return; }
+  currentUser = {...u, email};
+  document.getElementById('lerr').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initApp();
+}
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('l-pwd').value = '';
+  document.querySelectorAll('.adm').forEach(el => el.style.display='none');
+}
+document.addEventListener('keydown', e => {
+  if (e.key==='Enter' && document.getElementById('login-screen').style.display!=='none') doLogin();
+});
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+function initApp() {
+  document.getElementById('u-ini').textContent  = currentUser.ini;
+  document.getElementById('u-nome').textContent = currentUser.nome;
+  document.getElementById('u-ruolo').textContent = currentUser.ruolo==='admin' ? 'Amministratore' : 'Agente vendite';
+
+  const isAdmin = currentUser.ruolo === 'admin';
+  document.querySelectorAll('.adm').forEach(el => {
+    el.style.display = isAdmin ? (el.classList.contains('ni') ? 'flex' : 'block') : 'none';
+  });
+
+  document.getElementById('riviste-pills').innerHTML =
+    RIVISTE.map((r,i) => `<span class="rpill ${i===0?'active':''}" onclick="setRivista('${r}',this)">${r}</span>`).join('');
+
+  popolaSelectNumeri();
+  popolaSelectClienti();
+  aggiornaSelectFormatiPrev();
+  renderDashNotif();
+  renderClienti();
+  renderPreventivi();
+  renderListino();
+  renderPiano();
+  renderChartRiviste();
+  renderPLTabs();
+  goTo('dashboard');
+}
+function setRivista(r, el) {
+  document.querySelectorAll('.rpill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGAZIONE
+// ═══════════════════════════════════════════════════════
+const TITOLI = {
+  dashboard:'Dashboard', clienti:'Clienti', preventivi:'Preventivi',
+  listino:'Listino & spazi', piano:'Pianificazione numeri',
+  pagamenti:'Pagamenti', pl:'P&L — Conto economico per numero'
+};
+const ADM_SEZIONI = ['pagamenti','pl'];
+
+function goTo(id) {
+  if (ADM_SEZIONI.includes(id) && currentUser?.ruolo!=='admin') return;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n =>
+    n.classList.toggle('active', n.getAttribute('onclick')===`goTo('${id}')`)
+  );
+  document.getElementById('page-title').textContent = TITOLI[id]||id;
+  const acts = document.getElementById('page-act');
+  acts.innerHTML = '';
+  if (id==='clienti')    acts.innerHTML = '<button class="btn btn-p btn-sm" onclick="openModal(\'m-cliente\')">+ Nuovo cliente</button>';
+  if (id==='preventivi') acts.innerHTML = '<button class="btn btn-p btn-sm" onclick="openModal(\'m-prev\')">+ Nuovo preventivo</button>';
+  if (id==='piano')      acts.innerHTML = '<button class="btn btn-p btn-sm" onclick="openModal(\'m-numero\')">+ Nuovo numero</button>';
+}
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD NOTIFICHE
+// ═══════════════════════════════════════════════════════
+function renderDashNotif() {
+  const el = document.getElementById('dash-notif');
+  el.innerHTML = '';
+  if (currentUser?.ruolo !== 'admin') return;
+  const nAtt = preventivi.filter(p=>p.stato==='attesa').length;
+  if (nAtt > 0) el.innerHTML += `<div class="notif n-warn">${nAtt} preventivo/i in attesa di approvazione — <span style="cursor:pointer;text-decoration:underline;font-weight:500" onclick="goTo('preventivi')">vai ai preventivi</span></div>`;
+  const sottoMin = preventivi.filter(p => prezziMinimi[p.formatoId]>0 && p.importo<prezziMinimi[p.formatoId]);
+  if (sottoMin.length > 0) el.innerHTML += `<div class="notif n-danger">${sottoMin.length} preventivo/i con prezzo sotto il minimo di sostenibilità</div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER CLIENTI
+// ═══════════════════════════════════════════════════════
+function renderClienti() {
+  document.querySelector('#tbl-clienti tbody').innerHTML = clienti.map(c => `
+    <tr>
+      <td><strong>${c.ragione}</strong></td><td>${c.ref}</td>
+      <td><span class="badge bgr">${c.settore}</span></td>
+      <td style="font-size:12px;color:var(--tx2)">${c.tel}<br>${c.email}</td>
+      <td>${c.riviste.map(r=>`<span class="badge bb" style="margin-right:2px">${r}</span>`).join('')}</td>
+      <td>${eur(c.fat)}</td>
+      <td><button class="btn btn-sm">Modifica</button></td>
+    </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER PREVENTIVI
+// ═══════════════════════════════════════════════════════
+function renderPreventivi() {
+  const isAdmin = currentUser?.ruolo==='admin';
+  document.querySelector('#tbl-prev tbody').innerHTML = preventivi.map(p => {
+    const f   = FORMATI.find(x=>x.id===p.formatoId);
+    const min = prezziMinimi[p.formatoId] || 0;
+    const sotto = min > 0 && p.importo < min;
+    const azione = isAdmin && p.stato==='attesa'
+      ? `<button class="btn btn-sm btn-p" onclick="openApprova('${p.id}')">Approva</button>`
+      : `<button class="btn btn-sm">Dettaglio</button>`;
+    const cellMin = min > 0
+      ? `<span style="font-size:12px;${sotto?'color:var(--rd);font-weight:500':'color:var(--tx3)'}">${eur(min)}${sotto?' ⚠':''}</span>`
+      : `<span style="font-size:11px;color:var(--tx3)">—</span>`;
+    return `<tr style="${sotto?'background:var(--rdl)':''}">
+      <td style="color:var(--tx3);font-size:11px">#${p.id}</td>
+      <td><strong>${p.cliente}</strong></td>
+      <td>${p.rivista}</td>
+      <td style="font-size:12px">${f ? f.nome : p.formatoId}</td>
+      <td style="font-size:12px;color:var(--tx2)">${p.numero}</td>
+      <td style="font-weight:500">${eur(p.importo)}</td>
+      <td>${cellMin}</td>
+      <td style="font-size:12px;color:var(--tx2)">${p.agente}</td>
+      <td><span class="badge ${SB[p.stato]}">${SL[p.stato]}</span></td>
+      <td>${azione}</td>
+    </tr>`;
+  }).join('');
+
+  const sottoMin = preventivi.filter(p=>prezziMinimi[p.formatoId]>0 && p.importo<prezziMinimi[p.formatoId]);
+  document.getElementById('alert-prev').innerHTML = sottoMin.length > 0
+    ? `<div class="notif n-danger">${sottoMin.length} preventivo/i sotto il minimo di sostenibilità — verificare prima di procedere</div>`
+    : '';
+}
+
+// ═══════════════════════════════════════════════════════
+// LISTINO & SPAZI
+// ═══════════════════════════════════════════════════════
+function popolaSelectNumeri() {
+  const sel = document.getElementById('lst-num-sel');
+  sel.innerHTML = numeri.map(n => `<option value="${n.id}">${n.rivista} ${n.num}</option>`).join('');
+}
+
+function renderListino() {
+  const numId = document.getElementById('lst-num-sel')?.value;
+  const num   = numeri.find(n=>n.id===numId) || numeri[0];
+  if (!num) return;
+  const strut = num.struttura;
+
+  // ── Griglia spazi visiva ──
+  let html = '<div class="spazi-griglia">';
+  FORMATI.forEach(f => {
+    const qty = strut[f.id] || 0;
+    if (qty === 0) return;
+    const venduti = preventivi.filter(p => p.numId===num.id && p.formatoId===f.id && ['confermato','inviato','attesa'].includes(p.stato)).length;
+    const liberi  = Math.max(0, qty - venduti);
+    const min     = prezziMinimi[f.id];
+    const prezzo  = prezziVendita[f.id];
+    const sottoPm = min > 0 && prezzo < min;
+    const cls     = f.tipo==='copertina' ? 'premium' : venduti>=qty ? 'venduto' : 'libero';
+    for (let i=0; i<qty; i++) {
+      const iVenduto = i < venduti;
+      html += `<div class="spazio-card ${iVenduto?'venduto':f.tipo==='copertina'?'premium':'libero'}">
+        <div class="sc-nome">${f.nome}</div>
+        <div class="sc-prezzo">${eur(prezzo)}</div>
+        <div class="sc-stato">${iVenduto ? '✓ Venduto' : 'Disponibile'}</div>
+        ${min>0 ? `<div class="sc-min" style="${sottoPm?'':'color:var(--gn)'}">Min: ${eur(min)}</div>` : ''}
+      </div>`;
+    }
+  });
+  html += '</div>';
+
+  // ── Riepilogo ──
+  const totPagine = totaleSpazi(strut);
+  const totSpazi  = Object.entries(strut).reduce((a,[k,v])=>a+v, 0);
+  const venduti   = preventivi.filter(p=>p.numId===num.id && ['confermato','inviato','attesa'].includes(p.stato)).length;
+  const ricaviTot = preventivi.filter(p=>p.numId===num.id && ['confermato','inviato'].includes(p.stato)).reduce((a,p)=>a+p.importo,0);
+  const pct       = totSpazi > 0 ? Math.round(venduti/totSpazi*100) : 0;
+
+  html += `<div style="background:var(--bg);border-radius:var(--rs);padding:12px 14px;font-size:12px;color:var(--tx2)">
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+      <span>Pagine editoriali: <strong>${num.pEdit}</strong></span>
+      <span>Pagine pubblicitarie: <strong>${num.pPub}</strong></span>
+      <span>Pagine occupate: <strong>${totPagine}</strong> / ${num.pPub}</span>
+      <span>Spazi totali: <strong>${totSpazi}</strong></span>
+      <span>Venduti: <strong style="${pct>=80?'color:var(--gn)':pct>=40?'color:var(--am)':'color:var(--rd)'}">${venduti}</strong></span>
+      <span>Ricavi: <strong>${eur(ricaviTot)}</strong></span>
+    </div>
+    <div class="pbar"><div class="pbar-fill" style="width:${pct}%;background:${pct>=80?'var(--gn)':pct>=40?'var(--go)':'var(--rd)'}"></div></div>
+    <div style="margin-top:4px">${pct}% degli spazi venduti</div>
+  </div>`;
+
+  document.getElementById('listino-spazi-griglia').innerHTML = html;
+
+  // ── Prezzi modificabili ──
+  let prezziHtml = `<div style="background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--brd)">
+    <div class="struct-hdr" style="display:grid;grid-template-columns:1fr 80px 100px 36px;gap:8px">
+      <div>Formato</div><div style="text-align:right">Minimo</div><div style="text-align:right">Prezzo vendita</div><div></div>
+    </div>`;
+  FORMATI.forEach(f => {
+    const qty  = strut[f.id] || 0;
+    if (qty === 0) return;
+    const min  = prezziMinimi[f.id];
+    const p    = prezziVendita[f.id];
+    const ok   = min === 0 || p >= min;
+    const warn = min > 0 && p < min * 1.1 && p >= min;
+    const cls  = !ok ? 'fi-sm pericolo' : warn ? 'fi-sm attenzione' : 'fi-sm';
+    prezziHtml += `<div class="struct-row" style="${!ok?'background:var(--rdl)':''}">
+      <div><div style="font-size:12px;font-weight:500">${f.nome}</div><div style="font-size:11px;color:var(--tx3)">${qty} spazio/i</div></div>
+      <div style="text-align:right;font-size:12px;${min>0&&ok?'color:var(--gn)':min>0&&!ok?'color:var(--rd)':'color:var(--tx3)'}">${min>0?eur(min):'—'}</div>
+      <div style="text-align:right"><input type="number" class="${cls}" value="${p}" onchange="aggiornaPrezzo('${f.id}',this.value)"></div>
+      <div style="text-align:center;font-size:14px">${min>0?(ok?'<span style="color:var(--gn)">✓</span>':'<span style="color:var(--rd)">✗</span>'):'—'}</div>
+    </div>`;
+  });
+  prezziHtml += '</div>';
+  document.getElementById('listino-prezzi').innerHTML = prezziHtml;
+
+  // ── Analisi sostenibilità ──
+  const haMin = Object.values(prezziMinimi).some(v=>v>0);
+  if (!haMin) {
+    document.getElementById('listino-analisi').innerHTML = '<div style="font-size:12px;color:var(--tx3);text-align:center;padding:12px 0">Inserisci i costi nella sezione P&L</div>';
+  } else {
+    const sottoMin = FORMATI.filter(f=>(strut[f.id]||0)>0 && prezziMinimi[f.id]>0 && prezziVendita[f.id]<prezziMinimi[f.id]);
+    let aHtml = `<div class="notif ${sottoMin.length===0?'n-ok':'n-danger'}" style="margin-bottom:10px">
+      ${sottoMin.length===0 ? 'Tutti i prezzi sono sopra il minimo di sostenibilità' : `${sottoMin.length} formato/i sotto il minimo: ${sottoMin.map(f=>f.nome).join(', ')}`}
+    </div>`;
+    FORMATI.forEach(f => {
+      if ((strut[f.id]||0)===0 || prezziMinimi[f.id]===0) return;
+      const p = prezziVendita[f.id], m = prezziMinimi[f.id];
+      const pct = Math.min(130, Math.round(p/m*100));
+      const col = p>=m ? 'var(--gn)' : 'var(--rd)';
+      aHtml += `<div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px">
+          <span style="color:var(--tx2)">${f.nome}</span>
+          <span style="${p>=m?'color:var(--gn)':'color:var(--rd)'}">${p>=m?'+':''}${Math.round((p/m-1)*100)}% vs minimo</span>
+        </div>
+        <div class="pbar"><div class="pbar-fill" style="width:${pct}%;background:${col}"></div></div>
+      </div>`;
+    });
+    document.getElementById('listino-analisi').innerHTML = aHtml;
+  }
+}
+
+function aggiornaPrezzo(fId, val) {
+  prezziVendita[fId] = parseInt(val) || 0;
+  renderListino();
+  renderPreventivi();
+  renderDashNotif();
+  aggiornaMinimi();
+}
+
+// ═══════════════════════════════════════════════════════
+// STRUTTURA NUMERO (modal)
+// ═══════════════════════════════════════════════════════
+function openModificaStruttura() {
+  const numId = document.getElementById('lst-num-sel').value;
+  const num   = numeri.find(n=>n.id===numId);
+  if (!num) return;
+  numCorrente = num;
+  document.getElementById('str-lbl').textContent = num.rivista + ' ' + num.num;
+
+  let html = '';
+  FORMATI.forEach(f => {
+    const qty = num.struttura[f.id] || 0;
+    const isCop = f.tipo === 'copertina';
+    html += `<div class="struct-row">
+      <div><div style="font-size:12px;font-weight:500">${f.nome}</div><div style="font-size:11px;color:var(--tx3)">${f.desc} · ${f.pagine} pag.</div></div>
+      <div style="text-align:right;font-size:12px;color:var(--tx3)">${isCop?'fisso':''}</div>
+      <div style="text-align:right">
+        <input type="number" class="fi-sm" id="str-${f.id}" value="${qty}" min="0" ${isCop?'max="1" readonly style="color:var(--tx3)"':''} oninput="aggiornaRiepilogoStruttura()">
+      </div>
+      <div style="font-size:11px;color:var(--tx3);text-align:right">${eur(prezziVendita[f.id])}</div>
+      <div></div>
+    </div>`;
+  });
+  document.getElementById('struct-righe').innerHTML = html;
+  aggiornaRiepilogoStruttura();
+  openModal('m-struttura');
+}
+
+function aggiornaRiepilogoStruttura() {
+  const num = numCorrente;
+  if (!num) return;
+  let pagOcc = 0, totSpazi = 0;
+  FORMATI.forEach(f => {
+    const v = parseInt(document.getElementById('str-'+f.id)?.value) || 0;
+    pagOcc += v * f.pagine;
+    totSpazi += v;
+  });
+  const pagLib = num.pPub - pagOcc;
+  const ok = pagOcc <= num.pPub;
+  document.getElementById('struct-riepilogo').innerHTML = `
+    <div class="notif ${ok?'n-ok':'n-danger'}">
+      Pagine occupate: <strong>${pagOcc}</strong> / ${num.pPub} disponibili &nbsp;·&nbsp;
+      Spazi totali: <strong>${totSpazi}</strong> &nbsp;·&nbsp;
+      ${ok ? `Spazio libero: ${pagLib} pagine` : `Superato di ${pagOcc-num.pPub} pagine — riduci gli spazi`}
+    </div>`;
+}
+
+function salvaStruttura() {
+  const num = numCorrente;
+  if (!num) return;
+  let pagOcc = 0;
+  const nuovaStr = {};
+  FORMATI.forEach(f => {
+    const v = parseInt(document.getElementById('str-'+f.id)?.value) || 0;
+    nuovaStr[f.id] = v;
+    pagOcc += v * f.pagine;
+  });
+  if (pagOcc > num.pPub) { alert('Totale pagine supera il limite di '+num.pPub+'. Riduci gli spazi.'); return; }
+  num.struttura = nuovaStr;
+  closeModal('m-struttura');
+  renderListino();
+  renderPiano();
+}
+
+// ═══════════════════════════════════════════════════════
+// PIANIFICAZIONE
+// ═══════════════════════════════════════════════════════
+function renderPiano() {
+  document.getElementById('piano-list').innerHTML = numeri.map(n => {
+    const str    = n.struttura;
+    const totSp  = Object.values(str).reduce((a,b)=>a+b,0);
+    const venduti = preventivi.filter(p=>p.numId===n.id && ['confermato','inviato','attesa'].includes(p.stato)).length;
+    const pct    = totSp > 0 ? Math.round(venduti/totSp*100) : 0;
+    const col    = pct>=80?'var(--gn)':pct>=40?'var(--go)':'var(--rd)';
+    const bcl    = pct>=80?'bg':pct>=40?'ba':'br';
+    const pagOcc = totaleSpazi(str);
+    return `<div class="issue-row">
+      <div>
+        <div style="font-size:13px;font-weight:500">${n.rivista} ${n.num}</div>
+        <div style="font-size:11px;color:var(--tx3)">Uscita: ${fmtData(n.uscita)} · Chiusura: ${fmtData(n.chiusura)}</div>
+        <div style="font-size:11px;color:var(--tx3)">${n.copie.toLocaleString('it-IT')} copie · ${n.pEdit} pag. editoriali · ${pagOcc}/${n.pPub} pag. pub.</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--tx3);margin-bottom:3px">${venduti}/${totSp} spazi venduti</div>
+        <div class="pbar"><div class="pbar-fill" style="width:${pct}%;background:${col}"></div></div>
+      </div>
+      <span class="badge ${bcl}">${pct}%</span>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// CHART RIVISTE
+// ═══════════════════════════════════════════════════════
+function renderChartRiviste() {
+  const dati = [
+    {nome:'Everylife',val:7800,col:'#2C5F8A'},
+    {nome:'Metropolitan',val:5200,col:'#1D9E75'},
+    {nome:'Pet&Go',val:3100,col:'#D85A30'},
+    {nome:'Aqua&Sale',val:2300,col:'#B8900A'},
+  ];
+  const max = Math.max(...dati.map(d=>d.val));
+  document.getElementById('chart-riviste').innerHTML = dati.map(d => `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+      <div style="font-size:12px;color:var(--tx2);width:90px;flex-shrink:0">${d.nome}</div>
+      <div style="flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(d.val/max*100)}%;background:${d.col};border-radius:3px"></div>
+      </div>
+      <div style="font-size:12px;color:var(--tx2);width:48px;text-align:right">${eur(d.val)}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// P&L + CALCOLO PREZZI MINIMI
+// ═══════════════════════════════════════════════════════
+function renderPLTabs() {
+  document.getElementById('pl-tabs').innerHTML = numeri.map((n,i) =>
+    `<button class="btn btn-sm ${i===0?'btn-p':''}" onclick="setPLTab('${n.id}',this)">${n.rivista} ${n.num}</button>`
+  ).join('');
+  if (numeri.length > 0) document.getElementById('pl-lbl').textContent = numeri[0].rivista+' '+numeri[0].num;
+}
+
+function setPLTab(numId, btn) {
+  document.querySelectorAll('#pl-tabs button').forEach(b=>b.classList.remove('btn-p'));
+  btn.classList.add('btn-p');
+  const n = numeri.find(x=>x.id===numId);
+  document.getElementById('pl-lbl').textContent = n ? n.rivista+' '+n.num : '—';
+  document.getElementById('i-copie').value = n ? n.copie : 3000;
+  COSTI_IDS.forEach(k => { document.getElementById('i-'+k).value = 0; });
+  document.getElementById('i-ricavi').value = 0;
+  aggiornaPL();
+}
+
+function aggiornaPL() {
+  let tot = 0;
+  COSTI_IDS.forEach(k => {
+    const v = gv('i-'+k);
+    tot += v;
+    const el = document.getElementById('r-'+k);
+    if (el) { el.textContent = v>0 ? '−'+eur(v) : '€ 0'; el.className = v>0?'tr':''; }
+  });
+
+  const ricavi  = gv('i-ricavi');
+  const copie   = gv('i-copie') || 1;
+  const margine = gv('i-margine');
+  const target  = Math.round(tot * (1 + margine/100));
+  const netto   = ricavi - tot;
+  const pct     = tot > 0 ? Math.min(100, Math.round(ricavi/tot*100)) : 0;
+
+  document.getElementById('r-tot').textContent    = '−'+eur(tot);
+  document.getElementById('r-ricavi').textContent = '+'+eur(ricavi);
+  const netEl = document.getElementById('r-netto');
+  netEl.textContent = (netto>=0?'+':'−')+eur(Math.abs(netto));
+  netEl.className   = netto>=0?'tg':'tr';
+  document.getElementById('pl-pct').textContent = pct+'%';
+  const bar = document.getElementById('pl-bar');
+  bar.style.width      = pct+'%';
+  bar.style.background = pct>=100?'var(--gn)':pct>=60?'var(--go)':'var(--rd)';
+  document.getElementById('pl-copia').textContent  = tot>0 ? '€ '+(tot/copie).toFixed(2) : '—';
+  document.getElementById('pl-target').textContent = tot>0 ? eur(target) : '—';
+
+  // Calcola prezzi minimi ponderati
+  if (tot > 0) {
+    const pesoTot = FORMATI.reduce((s,f)=>s+f.peso,0);
+    const valPunto = target / pesoTot;
+    FORMATI.forEach(f => { prezziMinimi[f.id] = Math.round(f.peso * valPunto); });
+  } else {
+    FORMATI.forEach(f => { prezziMinimi[f.id] = 0; });
+  }
+
+  aggiornaMinimi();
+}
+
+function aggiornaMinimi() {
+  // aggiorna sezione minimi nel P&L
+  const el = document.getElementById('pl-minimi');
+  const haMin = Object.values(prezziMinimi).some(v=>v>0);
+  if (!haMin) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--tx3);padding:8px 0">Inserisci i costi per calcolare i minimi</div>';
+    return;
+  }
+  el.innerHTML = FORMATI.map(f => {
+    const min = prezziMinimi[f.id], p = prezziVendita[f.id];
+    const ok  = p >= min;
+    const pct = Math.min(130, Math.round(p/min*100));
+    return `<div style="margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:2px">
+        <span style="color:var(--tx2)">${f.nome}</span>
+        <span>Min <strong>${eur(min)}</strong> · Vendita <strong style="${ok?'color:var(--gn)':'color:var(--rd)'}">${eur(p)}</strong></span>
+      </div>
+      <div class="pbar"><div class="pbar-fill" style="width:${pct}%;background:${ok?'var(--gn)':'var(--rd)'}"></div></div>
+    </div>`;
+  }).join('');
+
+  renderListino();
+  renderPreventivi();
+  renderDashNotif();
+}
+
+function salvaCosti() { alert('Costi salvati! (persistenza database nella sessione 2 con Supabase)'); }
+
+// ═══════════════════════════════════════════════════════
+// MODALI
+// ═══════════════════════════════════════════════════════
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.addEventListener('click', e => { if(e.target.classList.contains('modal-ov')) e.target.classList.remove('open'); });
+
+// override per struttura che ha logica speciale
+document.getElementById('m-struttura').querySelector('.mclose').addEventListener('click', () => closeModal('m-struttura'));
+
+// bottone modifica struttura
+document.getElementById('sec-listino').addEventListener('click', e => {
+  if (e.target.textContent === 'Modifica struttura') openModificaStruttura();
+});
+
+function popolaClientiSelect() {
+  document.getElementById('p-cliente').innerHTML = clienti.map(c=>`<option>${c.ragione}</option>`).join('');
+}
+
+function aggiornaNumeriPrev() {
+  const sel = document.getElementById('p-numero');
+  sel.innerHTML = numeri.map(n=>`<option value="${n.id}">${n.rivista} ${n.num} — ${fmtData(n.uscita)}</option>`).join('');
+  aggiornaSelectFormatiPrev();
+}
+
+function aggiornaSelectFormatiPrev() {
+  const numId = document.getElementById('p-numero')?.value;
+  const num   = numeri.find(n=>n.id===numId) || numeri[0];
+  const sel   = document.getElementById('p-formato');
+  if (!sel) return;
+  sel.innerHTML = FORMATI
+    .filter(f => (num?.struttura[f.id]||0) > 0)
+    .map(f => {
+      const venduti = preventivi.filter(p=>p.numId===num?.id && p.formatoId===f.id && ['confermato','inviato','attesa'].includes(p.stato)).length;
+      const disponibili = (num?.struttura[f.id]||0) - venduti;
+      return `<option value="${f.id}" ${disponibili<=0?'disabled':''}>
+        ${f.nome} — ${eur(prezziVendita[f.id])} (${disponibili} disp.)
+      </option>`;
+    }).join('');
+  sincronizzaPrezzoPrev();
+}
+
+function sincronizzaPrezzoPrev() {
+  const fId = document.getElementById('p-formato')?.value;
+  if (!fId) return;
+  document.getElementById('p-listino').value = prezziVendita[fId] || 0;
+  document.getElementById('p-prezzo').value  = prezziVendita[fId] || 0;
+  document.getElementById('p-minimo').value  = prezziMinimi[fId]  || 0;
+  document.getElementById('p-sconto').value  = 0;
+  aggiornaTotalePrev();
+}
+
+function applicaSconto() {
+  const fId   = document.getElementById('p-formato')?.value;
+  const base  = prezziVendita[fId] || 0;
+  const sconto = parseInt(document.getElementById('p-sconto').value) || 0;
+  document.getElementById('p-prezzo').value = Math.round(base*(1-sconto/100));
+  aggiornaTotalePrev();
+}
+
+function aggiornaTotalePrev() {
+  const fId   = document.getElementById('p-formato')?.value;
+  const p     = parseInt(document.getElementById('p-prezzo').value) || 0;
+  const min   = prezziMinimi[fId] || 0;
+  const sotto = min > 0 && p < min;
+  document.getElementById('p-totale').textContent = eur(p);
+  document.getElementById('p-totale').style.color = sotto ? 'var(--rd)' : 'var(--ac)';
+  const av = document.getElementById('prev-avviso');
+  av.style.display = sotto ? 'flex' : 'none';
+  if (sotto) av.innerHTML = `⚠ Prezzo sotto il minimo di sostenibilità (${eur(min)}) — vendita in perdita`;
+}
+
+// ═══════════════════════════════════════════════════════
+// SALVATAGGI
+// ═══════════════════════════════════════════════════════
+function salvaCliente() {
+  const ragione = document.getElementById('c-ragione').value.trim();
+  if (!ragione) { alert('Inserisci la ragione sociale'); return; }
+  clienti.push({id:clienti.length+1,ragione,
+    ref:document.getElementById('c-ref').value,
+    settore:document.getElementById('c-settore').value,
+    tel:document.getElementById('c-tel').value,
+    email:document.getElementById('c-email').value,
+    riviste:[],fat:0
+  });
+  renderClienti(); popolaClientiSelect(); closeModal('m-cliente');
+  ['c-ragione','c-ref','c-tel','c-email','c-note'].forEach(id=>document.getElementById(id).value='');
+}
+
+function salvaPreventivo() {
+  const cliente  = document.getElementById('p-cliente').value;
+  const fId      = document.getElementById('p-formato').value;
+  const numId    = document.getElementById('p-numero').value;
+  const importo  = parseInt(document.getElementById('p-prezzo').value) || 0;
+  const min      = prezziMinimi[fId] || 0;
+  if (!cliente) { alert('Seleziona un cliente'); return; }
+  if (!fId) { alert('Seleziona un formato'); return; }
+  if (min > 0 && importo < min) {
+    if (!confirm(`Prezzo (${eur(importo)}) sotto il minimo di sostenibilità (${eur(min)}).\nVuoi procedere comunque?`)) return;
+  }
+  const num = numeri.find(n=>n.id===numId);
+  preventivi.push({
+    id:String(preventivi.length+1).padStart(3,'0'),
+    cliente, rivista:document.getElementById('p-rivista').value,
+    numId, formatoId:fId,
+    numero: num ? num.rivista+' '+num.num : '—',
+    importo, agente:currentUser.nome, stato:'attesa'
+  });
+  renderPreventivi(); renderDashNotif(); renderListino(); closeModal('m-prev');
+}
+
+function salvaNumero() {
+  const rivista  = document.getElementById('nn-rivista').value;
+  const num      = document.getElementById('nn-num').value.trim();
+  const uscita   = document.getElementById('nn-uscita').value;
+  const chiusura = document.getElementById('nn-chiusura').value;
+  const copie    = parseInt(document.getElementById('nn-copie').value) || 3000;
+  const pEdit    = parseInt(document.getElementById('nn-pedit').value) || 40;
+  const pPub     = parseInt(document.getElementById('nn-ppub').value) || 40;
+  if (!num || !uscita) { alert('Inserisci almeno il numero e la data di uscita'); return; }
+  const id = rivista.toLowerCase().replace(/[^a-z]/g,'')+num.replace(/[^0-9]/g,'')+'_'+Date.now();
+  numeri.push({id, rivista, num, uscita, chiusura, copie, pEdit, pPub, struttura:strutturaPredefinita(pPub)});
+  popolaSelectNumeri(); renderPiano(); renderPLTabs(); closeModal('m-numero');
+}
+
+// ═══════════════════════════════════════════════════════
+// APPROVAZIONE
+// ═══════════════════════════════════════════════════════
+function openApprova(id) {
+  prevInReview = preventivi.find(p=>p.id===id);
+  if (!prevInReview) return;
+  const f   = FORMATI.find(x=>x.id===prevInReview.formatoId);
+  const min = prezziMinimi[prevInReview.formatoId] || 0;
+  const sotto = min > 0 && prevInReview.importo < min;
+  document.getElementById('approva-body').innerHTML = `
+    <div style="font-size:13px;line-height:2.2">
+      <div><strong>Cliente:</strong> ${prevInReview.cliente}</div>
+      <div><strong>Rivista:</strong> ${prevInReview.rivista} — ${prevInReview.numero}</div>
+      <div><strong>Formato:</strong> ${f ? f.nome : prevInReview.formatoId}</div>
+      <div><strong>Importo:</strong> <span style="font-size:22px;font-family:'DM Serif Display',serif;${sotto?'color:var(--rd)':''}">${eur(prevInReview.importo)}</span></div>
+      ${min>0?`<div><strong>Minimo sostenibilità:</strong> <span style="${sotto?'color:var(--rd);font-weight:500':'color:var(--gn)'}">${eur(min)}</span></div>`:''}
+      <div><strong>Agente:</strong> ${prevInReview.agente}</div>
+    </div>
+    ${sotto?`<div class="notif n-danger" style="margin-top:12px">⚠ Prezzo sotto il minimo di sostenibilità — approvare genererà una perdita su questo spazio</div>`:''}`;
+  document.getElementById('btn-approva').className = sotto ? 'btn btn-go' : 'btn btn-p';
+  openModal('m-approva');
+}
+
+function approva() {
+  if (!prevInReview) return;
+  prevInReview.stato = 'confermato';
+  renderPreventivi(); renderDashNotif(); renderListino();
+  closeModal('m-approva');
+}
+function rifiuta() {
+  if (!prevInReview) return;
+  prevInReview.stato = 'rifiutato';
+  renderPreventivi(); renderDashNotif();
+  closeModal('m-approva');
+}
+
+// init select preventivo
+aggiornaNumeriPrev();
+</script>
+</body>
+</html>

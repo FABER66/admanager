@@ -1109,9 +1109,16 @@ async function aggiornaPrezzo(fId, val) {
 // STRUTTURA NUMERO
 // ═══════════════════════════════════════════════════════
 function openModificaStruttura() {
+  if (!numeri || numeri.length===0) {
+    toast('Aggiungi prima un numero nella sezione Pianificazione','err');
+    return;
+  }
   const numId = document.getElementById('lst-num-sel').value;
   const num   = numeri.find(n=>n.id===numId);
-  if (!num) return;
+  if (!num) {
+    toast('Seleziona prima un numero dal menu','err');
+    return;
+  }
   numCorrenteStruttura = num;
   document.getElementById('str-lbl').textContent = num.rivista_nome+' '+num.numero;
   const strut = num.struttura||{};
@@ -1166,7 +1173,11 @@ async function salvaStruttura() {
   setBtnLoading('btn-salva-str', true);
   const {error} = await sb.from('numeri').update({struttura:nuovaStr}).eq('id',num.id);
   setBtnLoading('btn-salva-str', false, 'Salva struttura');
-  if (error) { toast('Errore salvataggio','err'); return; }
+  if (error) {
+    toast('Errore: '+(error.message||error.code||'controlla console'),'err');
+    console.error('salvaStruttura error:', error);
+    return;
+  }
   toast('Struttura aggiornata!');
   await caricaNumeri();
   popolaSelectNumeriListino();
@@ -1220,7 +1231,11 @@ async function salvaNumero() {
     struttura: strutturaPredefinita(pPub)
   });
   setBtnLoading('btn-salva-num', false, 'Aggiungi numero');
-  if (error) { toast('Errore salvataggio','err'); console.error(error); return; }
+  if (error) {
+    toast('Errore: '+( error.message || error.code || 'controlla console'),'err');
+    console.error('salvaNumero error:', error);
+    return;
+  }
   toast('Numero aggiunto!');
   await caricaNumeri();
   popolaSelectNumeriListino();
@@ -1228,6 +1243,8 @@ async function salvaNumero() {
   renderPiano();
   renderPLTabs();
   closeModal('m-numero');
+  // reset form
+  ['nn-num','nn-uscita','nn-chiusura'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
 }
 
 // ═══════════════════════════════════════════════════════

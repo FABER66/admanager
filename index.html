@@ -1119,11 +1119,17 @@ function openModificaStruttura() {
   formati.forEach(f=>{
     const qty = strut[f.id]||0;
     const isCop = f.tipo==='copertina';
-    html += `<div class="struct-row">
-      <div><div style="font-size:12px;font-weight:500">${f.nome}</div><div style="font-size:11px;color:var(--tx3)">${f.descrizione} · ${f.pagine} pag.</div></div>
-      <div style="text-align:center;font-size:11px;color:var(--tx3)">${isCop?'✓':''}</div>
-      <div style="text-align:right"><input type="number" class="fi-sm" id="str-${f.id}" value="${qty}" min="0" ${isCop?'readonly style="color:var(--tx3)"':''} oninput="aggiornaRiepilogoStr()"></div>
-      <div style="text-align:right;font-size:12px;color:var(--tx3)">${eur(prezziVendita[f.id]||0)}</div>
+    const inputCell = isCop
+      ? `<span style="font-size:13px;font-weight:500;color:var(--tx3)">${qty} <span style="font-size:10px">(fisso)</span></span><input type="hidden" id="str-${f.id}" value="${qty}">`
+      : `<input type="number" class="fi-sm" id="str-${f.id}" value="${qty}" min="0" oninput="aggiornaRiepilogoStr()">`;
+    html += `<div class="struct-row" style="${isCop?'background:var(--gol)':''}">
+      <div>
+        <div style="font-size:12px;font-weight:500">${f.nome}</div>
+        <div style="font-size:11px;color:var(--tx3)">${f.descrizione} · ${f.pagine} pag. · ${eur(prezziVendita[f.id]||0)}</div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:${isCop?'var(--go)':'var(--tx3)'}">${isCop?'Fisso':'Libero'}</div>
+      <div style="text-align:right">${inputCell}</div>
+      <div></div>
     </div>`;
   });
   document.getElementById('struct-righe').innerHTML = html;
